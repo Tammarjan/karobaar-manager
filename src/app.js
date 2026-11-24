@@ -62,6 +62,7 @@ async function saveInvoiceAtomic({cart,customerId,customerName,date,invoiceNo,di
     const productRows=productsRequest.result,batchRows=batchesRequest.result;
     const productMap=new Map(productRows.map(p=>[p.id,p]));
     const batchData={inventory_batches:batchRows};
+    const originalBatches=new Map(batchRows.map(b=>[b.id,Number(b.remaining||0)]));
     for(const line of cart){
      const p=productMap.get(line.productId);
      if(!p||Number(p.stock||0)<line.qty)throw new Error("Stock changed for "+line.name+". Please reopen the invoice.");
@@ -72,7 +73,6 @@ async function saveInvoiceAtomic({cart,customerId,customerName,date,invoiceNo,di
      records.push({id:uid(),invoiceNo,productId:p.id,productName:p.name,unit:p.unit,customerId:customerId||"",customerName:customerName||"Walk-in customer",qty:line.qty,rate:net/line.qty,grossRate:line.rate,grossTotal:gross,discountShare:share,total:net,cost,profit:net-cost,paid:grandTotal?paid*net/grandTotal:0,batchAllocations:allocations,date,createdAt:Date.now()});
     }
     for(const p of productUpdates)productStore.put(p);
-    const originalBatches=new Map(batchesRequest.result.map(b=>[b.id,Number(b.remaining||0)]));
     for(const b of batchRows)if(originalBatches.get(b.id)!==Number(b.remaining||0))batchStore.put(b);
    }catch(error){fail(error.message||"Could not prepare invoice");}
   };
