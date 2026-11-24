@@ -50,3 +50,9 @@ Business records are stored in IndexedDB in the browser on this device. Clearing
 This is an active development build. It has received source-level syntax checks, but it is not yet a final audited accounting release. Test it with sample records and keep backups before using it for live business accounts.
 \n\n## Supplier management\n- Supplier directory, optional supplier assignment on stock purchases, supplier payment records, outstanding payable balances and printable supplier account statements.\n
 - Business profile settings are stored locally and included in JSON backups.
+
+## Advanced inventory
+- Per-product minimum stock levels with low-stock alerts and product search.
+- Batch/lot number and expiry-date capture on purchases; remaining batch quantities are tracked using earliest-expiry-first stock consumption.
+- Expiry alerts for batches due within 30 days and expired batches.
+- Product transaction history with purchases, sales, returns, stock adjustments and batch balances.
