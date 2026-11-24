@@ -103,3 +103,5 @@ Customer and supplier payments now recalculate the latest outstanding balance in
 - Regression tests cover legacy invoice profit and a fully returned, fully refunded customer sale.
 
 - Dashboard gross-profit styling now clearly marks a negative gross result as a loss.
+
+- Backup restore validation is covered by tests; legacy backups without optional stores are normalized to empty arrays, while malformed records and duplicate IDs are rejected before existing device data is cleared.
