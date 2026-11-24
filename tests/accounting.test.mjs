@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { customerBalance, supplierBalance, groupSalesByInvoice, profitSummary } from "../src/accounting.js";
+import { customerBalance, supplierBalance, groupSalesByInvoice, profitSummary, buildAccountingCsv } from "../src/accounting.js";
 import { validateBackupPayload } from "../src/backup.js";
 import { reconcileInventory } from "../src/inventory.js";
 
@@ -73,3 +73,23 @@ test("inventory reconciliation separates untracked stock, over-allocation and or
 test("inventory reconciliation flags invalid negative and non-numeric quantities", () => { const result=reconcileInventory([{id:"p1",name:"A",stock:-2},{id:"p2",name:"B",stock:4}],[{id:"b1",productId:"p2",remaining:-1},{id:"b2",productId:"p2",remaining:"bad"}]); assert.equal(result.invalidProducts.length,1); assert.equal(result.invalidBatches.length,2); assert.equal(result.untracked.length,1); assert.equal(result.untracked[0].batchQty,0); });
 
 test("inventory reconciliation treats legacy missing product stock as zero", () => { const result=reconcileInventory([{id:"old",name:"Legacy"}],[]); assert.equal(result.rows[0].stock,0); assert.equal(result.invalidProducts.length,0); });
+
+test("accounting CSV exports return refunds, restock status, suppliers and transaction details", () => {
+  const csv = buildAccountingCsv({
+    sales: [{date:"2026-11-24",invoiceNo:"INV-1",customerName:"A",productName:"Tea",qty:2,rate:50,total:100,cost:60,profit:40}],
+    purchases: [{date:"2026-11-24",supplierName:"Vendor",productName:"Tea",qty:5,cost:30,total:150,batchNo:"B-1",expiryDate:"2027-01-01"}],
+    sales_returns: [{date:"2026-11-24",invoiceNo:"INV-1",customerName:"A",productName:"Tea",qty:1,rate:50,amount:50,cost:30,refundPaid:20,restocked:true,reason:"Damaged pack"}],
+    payments: [{date:"2026-11-24",customerName:"A",amount:20,note:"Cash received"}],
+    supplier_payments: [{date:"2026-11-24",supplierName:"Vendor",amount:10,note:"Bank transfer"}]
+  });
+  assert.match(csv,/Cash Refunded/);
+  assert.match(csv,/"20","Yes","Damaged pack"/);
+  assert.match(csv,/"Vendor","Tea","5","30","150"/);
+  assert.match(csv,/"Supplier payment"/);
+  assert.equal(csv.split("\\n").length,6);
+});
+test("accounting CSV neutralizes spreadsheet formulas in untrusted text fields", () => {
+  const csv=buildAccountingCsv({expenses:[{date:"2026-11-24",category:"=HYPERLINK(1)",note:"@SUM(A1)",amount:10}]});
+  assert.match(csv,/"'=HYPERLINK\\(1\\)"/);
+  assert.match(csv,/"'@SUM\\(A1\\)"/);
+});
