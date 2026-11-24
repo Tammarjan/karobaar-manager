@@ -1,4 +1,4 @@
-const CACHE = "karobaar-manager-v31";
+const CACHE = "karobaar-manager-v32";
 const CORE = ["./","./index.html","./src/style.css","./src/app.js","./src/accounting.js","./src/backup.js","./src/inventory.js","./src/data-integrity.js","./manifest.webmanifest","./icons/icon.svg"];
 self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener("activate",event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
