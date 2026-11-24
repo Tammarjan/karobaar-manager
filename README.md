@@ -115,3 +115,8 @@ Inventory reconciliation is a pure tested module. It separates untracked product
 ## Accounting CSV export
 
 The accounting CSV includes sales, purchases, expenses, customer and supplier payments, stock adjustments and sales returns. Return rows include cash refunded and whether goods were restocked. Text fields beginning with spreadsheet formula characters are neutralized to reduce CSV formula-injection risk.
+
+
+## Transaction link audit
+
+Backup & settings includes a read-only record-link audit. It checks sales and purchases against products, optional purchase supplier references, returns against original sales, customer and supplier payments against their account records, batches against products, and stock adjustments against products. It reports missing links without modifying or deleting data.
