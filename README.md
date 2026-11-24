@@ -73,3 +73,14 @@ This is an active development build. It has received source-level syntax checks,
 - Add multiple products and quantities to one invoice, remove cart lines before saving, and apply a fixed invoice discount.
 - Invoice totals and received payments are allocated across item-level sale records so existing customer balances, product returns and stock batch tracking continue to work.
 - Invoice printout groups all products under one invoice number.
+
+
+## Accounting unit tests
+
+Pure accounting calculations are shared by the app and Node's built-in test runner. With Node.js 20 or newer installed, run:
+
+```sh
+node --test tests/accounting.test.mjs
+```
+
+Tests cover multi-item invoice aggregation, customer balances, supplier payables, returned-stock COGS reversal, stock losses and legacy records with missing optional values. GitHub Actions runs this suite on pushes and pull requests.
