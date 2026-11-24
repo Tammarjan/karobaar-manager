@@ -94,3 +94,10 @@ POS invoice creation re-reads current product and batch stock inside one Indexed
 ## Payment transaction safety
 
 Customer and supplier payments now recalculate the latest outstanding balance inside read-write transactions before inserting a payment record. This prevents two tabs from accepting payments against the same stale balance.
+
+
+## Accounting audit updates
+
+- Invoice profit falls back to net line total minus cost for legacy sale records that do not contain a stored profit field.
+- The dashboard trend chart includes negative net-profit values below a zero baseline rather than flattening losses to zero.
+- Regression tests cover legacy invoice profit and a fully returned, fully refunded customer sale.
