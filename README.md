@@ -44,8 +44,12 @@ Business records are stored in IndexedDB in the browser on this device. Clearing
 - Gross profit = sales total - cost of goods sold.
 - Net profit = gross profit - recorded business expenses.
 - New purchases update the product's weighted-average unit cost.
-- Customer outstanding = sale totals - initial amounts received - later recorded customer payments.
+- Customer outstanding = sale totals - sales returns / credits - initial amounts received - later customer payments + cash refunds paid to customers.
+- Supplier payable = assigned purchase totals - recorded supplier payments.
+- Gross profit = net sales after returns - cost of goods sold; the cost of returned goods is reversed only when the goods are restocked.
+- Net profit = gross profit - recorded business expenses - stock losses from stock reductions.
 - Stock value is an estimate using the weighted-average unit cost and current stock quantity.
+- Inventory reconciliation compares each product's available stock with the sum of its remaining batch quantities. Lower batch totals are identified as untracked stock; batch totals exceeding product stock and batches without a matching product are flagged for review.
 
 This is an active development build. It has received source-level syntax checks, but it is not yet a final audited accounting release. Test it with sample records and keep backups before using it for live business accounts.
 \n\n## Supplier management\n- Supplier directory, optional supplier assignment on stock purchases, supplier payment records, outstanding payable balances and printable supplier account statements.\n
@@ -56,6 +60,7 @@ This is an active development build. It has received source-level syntax checks,
 - Batch/lot number and expiry-date capture on purchases; remaining batch quantities are tracked using earliest-expiry-first stock consumption.
 - Expiry alerts for batches due within 30 days and expired batches.
 - Product transaction history with purchases, sales, returns, stock adjustments and batch balances.
+- Inventory reconciliation panel compares product stock with remaining batch quantities and flags over-allocated or orphan batches.
 
 ## Barcode / QR assisted POS
 - Optional unique barcode/QR value per product.
