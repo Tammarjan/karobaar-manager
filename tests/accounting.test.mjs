@@ -90,6 +90,6 @@ test("accounting CSV exports return refunds, restock status, suppliers and trans
 });
 test("accounting CSV neutralizes spreadsheet formulas in untrusted text fields", () => {
   const csv=buildAccountingCsv({expenses:[{date:"2026-11-24",category:"=HYPERLINK(1)",note:"@SUM(A1)",amount:10}]});
-  assert.match(csv,/"'=HYPERLINK\\(1\\)"/);
-  assert.match(csv,/"'@SUM\\(A1\\)"/);
+  assert.match(csv,/"'=HYPERLINK\(1\)"/);
+  assert.match(csv,/"'@SUM\(A1\)"/);
 });
