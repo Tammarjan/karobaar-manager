@@ -5,6 +5,7 @@ import android.telephony.SmsManager;
 import com.getcapacitor.*;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.PermissionCallback;
 import java.util.ArrayList;
 
 @CapacitorPlugin(name = "DirectSms", permissions = {
