@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { customerBalance, supplierBalance, groupSalesByInvoice, profitSummary } from "../src/accounting.js";
 import { validateBackupPayload } from "../src/backup.js";
+import { reconcileInventory } from "../src/inventory.js";
 
 test("multi-item invoice groups lines and combines returns without merging distinct invoices", () => {
   const sales = [
@@ -67,3 +68,6 @@ test("customer account remains balanced when a fully paid sale is fully returned
 
 test("backup validation accepts legacy files missing optional stores without mutating input", () => { const stores=["products","purchases","sales","customers","expenses","payments","sales_returns","inventory_batches"]; const input={app:"Karobaar Manager",data:{products:[{id:"p1"}],purchases:[],sales:[],customers:[],expenses:[],payments:[]}}; const result=validateBackupPayload(input,stores); assert.deepEqual(result.data.sales_returns,[]); assert.deepEqual(result.data.inventory_batches,[]); assert.equal(input.data.sales_returns,undefined); });
 test("backup validation rejects duplicate IDs and malformed records before restore", () => { const stores=["products","purchases","sales","customers","expenses","payments"]; const base={app:"Karobaar Manager",data:{products:[{id:"p1"},{id:"p1"}],purchases:[],sales:[],customers:[],expenses:[],payments:[]}}; assert.throws(()=>validateBackupPayload(base,stores),/duplicate IDs/); const malformed={app:"Karobaar Manager",data:{products:[{id:" "}],purchases:[],sales:[],customers:[],expenses:[],payments:[]}}; assert.throws(()=>validateBackupPayload(malformed,stores),/invalid products record/); });
+
+test("inventory reconciliation separates untracked stock, over-allocation and orphan batches", () => { const result=reconcileInventory([{id:"p1",name:"A",stock:8},{id:"p2",name:"B",stock:2}],[{id:"b1",productId:"p1",remaining:5},{id:"b2",productId:"p2",remaining:4},{id:"b3",productId:"missing",remaining:3}]); assert.equal(result.untracked[0].difference,3); assert.equal(result.over[0].difference,-2); assert.equal(result.orphan.length,1); });
+test("inventory reconciliation flags invalid negative and non-numeric quantities", () => { const result=reconcileInventory([{id:"p1",name:"A",stock:-2},{id:"p2",name:"B",stock:4}],[{id:"b1",productId:"p2",remaining:-1},{id:"b2",productId:"p2",remaining:"bad"}]); assert.equal(result.invalidProducts.length,1); assert.equal(result.invalidBatches.length,2); assert.equal(result.untracked.length,1); assert.equal(result.untracked[0].batchQty,0); });
