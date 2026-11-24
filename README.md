@@ -2,19 +2,21 @@
 
 A simple, mobile-first, offline-first business manager for small business owners.
 
-## Current foundation
+## Features in the current development build
 
-- Responsive dashboard designed for phone and desktop
-- Local IndexedDB database (no account, server, or Cloudflare required)
-- Products and stock records
-- Purchase / stock-in entries with weighted-average unit cost
-- Sales with customer selection and saved default selling rates
-- Per-sale rate override with an option to update the default rate
-- Customer list and purchase totals
+- Mobile-first dashboard with sales, investment, gross profit, net profit and stock value
+- Investment, sales and profit trend chart
+- Local IndexedDB storage; no account, backend or Cloudflare required
+- Product catalogue and available stock
+- Purchase / stock-in entries using weighted-average unit cost
+- Sales with customer selection, automatic totals and default selling rates
+- One-time selling-rate override or update the saved default rate
+- Customer ledger with purchase history, payments received and outstanding balance
+- Record later customer payments against their balance
 - Business expense records
-- Gross profit and net profit summaries
-- CSV report export
-- PWA manifest and service-worker offline shell
+- Daily, weekly, monthly, yearly and all-time report filters
+- CSV export and JSON backup / restore
+- PWA manifest and service-worker offline application shell
 
 ## Run locally
 
@@ -28,14 +30,16 @@ Open the local URL in a modern browser. Service workers and installable PWA feat
 
 ## Data and privacy
 
-Business records are stored in the browser's IndexedDB on this device. Clearing browser/app storage can delete these records. Export and backup/restore workflows will be added before the production release.
+Business records are stored in IndexedDB in the browser on this device. Clearing browser/app storage or uninstalling the app can remove local records. Use **Backup & settings → Download backup** regularly and store the JSON backup somewhere safe. Restore replaces the current local records after confirmation.
 
 ## Accounting notes
 
-- Sales revenue is recorded separately from the cost of goods sold.
+- Total investment is the total of recorded stock purchases for the selected period.
+- Sales revenue is separate from the cost of goods sold.
 - Gross profit = sales total - cost of goods sold.
-- Net profit = gross profit - recorded expenses.
-- Product unit cost uses a weighted average when new purchases are added.
-- Current stock value is an estimate using that weighted-average unit cost.
+- Net profit = gross profit - recorded business expenses.
+- New purchases update the product's weighted-average unit cost.
+- Customer outstanding = sale totals - initial amounts received - later recorded customer payments.
+- Stock value is an estimate using the weighted-average unit cost and current stock quantity.
 
-This is an initial development build, not a final audited accounting system.
+This is an active development build. It has received source-level syntax checks, but it is not yet a final audited accounting release. Test it with sample records and keep backups before using it for live business accounts.
