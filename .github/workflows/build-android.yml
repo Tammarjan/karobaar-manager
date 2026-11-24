@@ -66,7 +66,8 @@ jobs:
         run: |
           mkdir -p android/app/src/main/java/pk/karobaar/manager
           cp native/android/DirectSmsPlugin.java android/app/src/main/java/pk/karobaar/manager/
-          printf '%s\n' 'package pk.karobaar.manager;' 'import com.getcapacitor.BridgeActivity;' 'public class MainActivity extends BridgeActivity {' '  @Override public void onCreate(android.os.Bundle savedInstanceState) {' '    registerPlugin(DirectSmsPlugin.class);' '    super.onCreate(savedInstanceState);' '  }' '}' > android/app/src/main/java/pk/karobaar/manager/MainActivity.java
+          cp native/android/NativeBackupPlugin.java android/app/src/main/java/pk/karobaar/manager/
+          printf '%s\n' 'package pk.karobaar.manager;' 'import com.getcapacitor.BridgeActivity;' 'public class MainActivity extends BridgeActivity {' '  @Override public void onCreate(android.os.Bundle savedInstanceState) {' '    registerPlugin(DirectSmsPlugin.class);' '    registerPlugin(NativeBackupPlugin.class);' '    super.onCreate(savedInstanceState);' '  }' '}' > android/app/src/main/java/pk/karobaar/manager/MainActivity.java
           sed -i 's#<application#<uses-permission android:name="android.permission.SEND_SMS" />\n    <application#' android/app/src/main/AndroidManifest.xml
 
       - name: Sync offline app into Android project
