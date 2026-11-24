@@ -27,7 +27,7 @@ ${pageIntro("Good business starts with clear numbers","Here is how your business
 <div class="stats-grid">
  <div class="stat-card"><div class="stat-top">Total investment <span class="stat-icon">⇧</span></div><div class="stat-value">${money(investment)}</div><div class="stat-note">Recorded stock purchases</div></div>
  <div class="stat-card"><div class="stat-top">Total sales <span class="stat-icon">↗</span></div><div class="stat-value">${money(revenue)}</div><div class="stat-note">All recorded sales</div></div>
- <div class="stat-card"><div class="stat-top">Gross profit <span class="stat-icon">◈</span></div><div class="stat-value positive">${money(gross)}</div><div class="stat-note">Sales minus cost of sold stock</div></div>
+ <div class="stat-card"><div class="stat-top">Gross profit <span class="stat-icon">◈</span></div><div class="stat-value ${gross>=0?"positive":"negative"}">${money(gross)}</div><div class="stat-note">Sales minus cost of sold stock</div></div>
  <div class="stat-card"><div class="stat-top">Net profit <span class="stat-icon">⌁</span></div><div class="stat-value ${net<0?"negative":"positive"}">${money(net)}</div><div class="stat-note">After expenses and stock losses</div></div>
  <div class="stat-card"><div class="stat-top">Stock value <span class="stat-icon">▤</span></div><div class="stat-value">${money(stockValue)}</div><div class="stat-note">${stockQty.toLocaleString()} units available</div></div>
 </div>
