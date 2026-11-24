@@ -56,3 +56,9 @@ This is an active development build. It has received source-level syntax checks,
 - Batch/lot number and expiry-date capture on purchases; remaining batch quantities are tracked using earliest-expiry-first stock consumption.
 - Expiry alerts for batches due within 30 days and expired batches.
 - Product transaction history with purchases, sales, returns, stock adjustments and batch balances.
+
+## Barcode / QR assisted POS
+- Optional unique barcode/QR value per product.
+- Quick POS sale accepts keyboard barcode scanners and manual code entry.
+- Uses the browser BarcodeDetector API for camera scanning where supported; external scanner entry remains available as fallback.
+- Camera scanning requires HTTPS, camera permission and browser support.
