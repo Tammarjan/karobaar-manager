@@ -48,6 +48,9 @@ jobs:
       - name: Install Capacitor
         run: npm install --no-audit --no-fund
 
+      - name: Bundle app JavaScript
+        run: npm run build:web
+
       - name: Prepare offline web assets
         run: |
           mkdir -p www
