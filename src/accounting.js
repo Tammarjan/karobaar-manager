@@ -57,3 +57,21 @@ export function profitSummary({ sales = [], returns = [], expenses = [], adjustm
   const gross = revenue - cogs;
   return { revenue, cogs, expenses: expenseTotal, stockLoss, gross, net: gross - expenseTotal - stockLoss };
 }
+
+
+export function buildAccountingCsv(data) {
+  const rows = [["Type","Date","Reference","Party","Item / Details","Quantity","Unit Rate","Amount","Cost","Profit","Cash Refunded","Stock Restocked","Notes"]];
+  for (const sale of data.sales || []) rows.push(["Sale",sale.date,sale.invoiceNo||"",sale.customerName||"",sale.productName||"",sale.qty??"",sale.rate??"",sale.total??"",sale.cost??"",sale.profit??"","","",""]);
+  for (const purchase of data.purchases || []) rows.push(["Purchase",purchase.date,purchase.batchNo||"",purchase.supplierName||"",purchase.productName||"",purchase.qty??"",purchase.cost??"",purchase.total??"",purchase.total??"","","","",[purchase.batchNo?"Batch: "+purchase.batchNo:"",purchase.expiryDate?"Expiry: "+purchase.expiryDate:""].filter(Boolean).join("; ")]);
+  for (const expense of data.expenses || []) rows.push(["Expense",expense.date,"",expense.category||"",expense.note||"","","",expense.amount??"","","","","",""]);
+  for (const payment of data.payments || []) rows.push(["Customer payment",payment.date,"",payment.customerName||"","Account payment","","",payment.amount??"","","","","",payment.note||""]);
+  for (const adjustment of data.stock_adjustments || []) rows.push(["Stock adjustment",adjustment.date,"","",adjustment.productName||"",adjustment.delta??"","",adjustment.lossValue??0,adjustment.lossValue??0,"","","",adjustment.reason||""]);
+  for (const returned of data.sales_returns || []) rows.push(["Sales return",returned.date,returned.invoiceNo||"",returned.customerName||"",returned.productName||"",returned.qty??"",returned.rate??"",returned.amount??"",returned.cost??0,-(Number(returned.amount||0)-Number(returned.restocked?returned.cost||0:0)),returned.refundPaid??0,returned.restocked?"Yes":"No",returned.reason||""]);
+  for (const payment of data.supplier_payments || []) rows.push(["Supplier payment",payment.date,"",payment.supplierName||"","Account payment","","",payment.amount??"","","","","",payment.note||""]);
+  const safeCell = value => {
+    let cell = String(value ?? "");
+    if (typeof value === "string" && /^[\\s]*[=+@\\-]/.test(cell)) cell = "'" + cell;
+    return '"' + cell.replace(/"/g,'""') + '"';
+  };
+  return rows.map(row => row.map(safeCell).join(",")).join("\n");
+}
