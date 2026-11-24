@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { customerBalance, supplierBalance, groupSalesByInvoice, profitSummary, buildAccountingCsv } from "../src/accounting.js";
 import { validateBackupPayload } from "../src/backup.js";
 import { reconcileInventory } from "../src/inventory.js";
+import { auditDataIntegrity } from "../src/data-integrity.js";
 
 test("multi-item invoice groups lines and combines returns without merging distinct invoices", () => {
   const sales = [
@@ -92,4 +93,24 @@ test("accounting CSV neutralizes spreadsheet formulas in untrusted text fields",
   const csv=buildAccountingCsv({expenses:[{date:"2026-11-24",category:"=HYPERLINK(1)",note:"@SUM(A1)",amount:10}]});
   assert.match(csv,/"'=HYPERLINK\(1\)"/);
   assert.match(csv,/"'@SUM\(A1\)"/);
+});
+
+test("data integrity audit detects missing transaction links but allows optional walk-in and supplier references", () => {
+  const result = auditDataIntegrity({
+    products:[{id:"p1"}], customers:[{id:"c1"}], suppliers:[{id:"v1"}], sales:[{id:"s1",productId:"p1"}],
+    purchases:[{id:"buy1",productId:"p1",supplierId:""}],
+    sales_returns:[{id:"r1",saleId:"missing-sale"}],
+    payments:[{id:"pay1",customerId:"missing-customer"}],
+    supplier_payments:[{id:"sp1",supplierId:"missing-supplier"}],
+    inventory_batches:[{id:"b1",productId:"missing-product"}],
+    stock_adjustments:[{id:"a1",productId:"p1"}]
+  });
+  assert.equal(result.issues.length,4);
+  assert.deepEqual(result.issues.map(x=>x.type),[
+    "Return → original sale","Customer payment → customer","Supplier payment → supplier","Batch → product"
+  ]);
+});
+test("data integrity audit accepts a clean linked dataset and empty legacy optional stores", () => {
+  const result=auditDataIntegrity({products:[{id:"p"}],customers:[{id:"c"}],suppliers:[{id:"v"}],sales:[{id:"s",productId:"p"}],purchases:[{id:"b",productId:"p",supplierId:"v"}],sales_returns:[{id:"r",saleId:"s"}],payments:[{id:"pay",customerId:"c"}],supplier_payments:[{id:"sp",supplierId:"v"}],inventory_batches:[{id:"batch",productId:"p"}],stock_adjustments:[{id:"adj",productId:"p"}]});
+  assert.equal(result.issues.length,0);
 });
