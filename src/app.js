@@ -51,7 +51,7 @@ function batchAllocations(d,productId,qty){let remaining=qty;const batches=d.inv
 async function saveInvoiceAtomic({cart,customerId,customerName,date,invoiceNo,discount,paid,subtotal,grandTotal}){
  return new Promise((resolve,reject)=>{
   const tx=db.transaction(["products","sales","inventory_batches"],"readwrite");
-  const productStore=tx.objectStore("products"),batchStore=tx.objectStore("inventory_batches");
+  const productStore=tx.objectStore("products"),salesStore=tx.objectStore("sales"),batchStore=tx.objectStore("inventory_batches");
   const productsRequest=productStore.getAll(),batchesRequest=batchStore.getAll();
   let records=[],productUpdates=[];
   let productsReady=false,batchesReady=false,failed=false;
@@ -74,6 +74,7 @@ async function saveInvoiceAtomic({cart,customerId,customerName,date,invoiceNo,di
     }
     for(const p of productUpdates)productStore.put(p);
     for(const b of batchRows)if(originalBatches.get(b.id)!==Number(b.remaining||0))batchStore.put(b);
+    for(const row of records)salesStore.put(row);
    }catch(error){fail(error.message||"Could not prepare invoice");}
   };
   productsRequest.onsuccess=()=>{productsReady=true;build();};
