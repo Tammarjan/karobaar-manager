@@ -13,7 +13,7 @@ A simple, mobile-first, offline-first business manager for small business owners
 - Selling rate automatically updates when a different product is selected in the sale form
 - Purchase / stock-in entries using weighted-average unit cost
 - Sales with customer selection, automatic totals and default selling rates
-- Individual numbered sales invoices with print / save as PDF
+- Individual numbered sales invoices with business name, contact details, address, optional logo URL and custom footer; print / save as PDF
 - Amount received defaults to zero, allowing credit sales without extra typing
 - One-time selling-rate override or update the saved default rate
 - Customer ledger with purchase history, payments received and outstanding balance
@@ -49,3 +49,4 @@ Business records are stored in IndexedDB in the browser on this device. Clearing
 
 This is an active development build. It has received source-level syntax checks, but it is not yet a final audited accounting release. Test it with sample records and keep backups before using it for live business accounts.
 \n\n## Supplier management\n- Supplier directory, optional supplier assignment on stock purchases, supplier payment records, outstanding payable balances and printable supplier account statements.\n
+- Business profile settings are stored locally and included in JSON backups.
