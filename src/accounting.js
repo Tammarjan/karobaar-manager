@@ -70,7 +70,7 @@ export function buildAccountingCsv(data) {
   for (const payment of data.supplier_payments || []) rows.push(["Supplier payment",payment.date,"",payment.supplierName||"","Account payment","","",payment.amount??"","","","","",payment.note||""]);
   const safeCell = value => {
     let cell = String(value ?? "");
-    if (typeof value === "string" && /^[\\s]*[=+@\\-]/.test(cell)) cell = "'" + cell;
+    if (typeof value === "string" && /^[\s]*[=+@-]/.test(cell)) cell = "'" + cell;
     return '"' + cell.replace(/"/g,'""') + '"';
   };
   return rows.map(row => row.map(safeCell).join(",")).join("\n");
