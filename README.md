@@ -130,7 +130,7 @@ Backup & settings includes a read-only record-link audit. It checks sales and pu
 
 
 ## PWA installation and offline behavior
-- The web app declares a stable manifest application ID and standalone display mode, with mobile browser metadata and an SVG app icon.
+- The web app declares a stable manifest application ID and standalone display mode, with mobile browser metadata and PNG launcher icons at 192×192 and 512×512 (plus the SVG web icon).
 - The service worker precaches the application shell, uses the cached app shell only for failed page navigations, and does not return HTML as a fallback for failed JavaScript, CSS or image requests.
 - Cache activation removes only older Karobaar Manager caches, leaving unrelated apps' caches on the same origin untouched.
 - For reliable first installation, open the hosted app once while online; after the shell is cached, it can start offline. Android APK packaging still needs a packaging tool and a final install test on a physical device.
