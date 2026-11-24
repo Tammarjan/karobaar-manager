@@ -84,3 +84,8 @@ node --test tests/accounting.test.mjs
 ```
 
 Tests cover multi-item invoice aggregation, customer balances, supplier payables, returned-stock COGS reversal, stock losses and legacy records with missing optional values. GitHub Actions runs this suite on pushes and pull requests.
+
+
+## Transaction safety
+
+POS invoice creation re-reads current product and batch stock inside one IndexedDB read-write transaction. Stock validation, FEFO batch deductions, product quantity updates and invoice line inserts commit together or are aborted together. This prevents stale stock snapshots from overwriting newer inventory when two tabs attempt sales close together.
