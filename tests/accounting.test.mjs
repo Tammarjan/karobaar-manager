@@ -60,3 +60,6 @@ test("legacy sales without optional numeric fields remain safe", () => {
   const result = profitSummary({ sales: [{}], returns: [{}], expenses: [{}], adjustments: [{}] });
   assert.deepEqual(result, { revenue: 0, cogs: 0, expenses: 0, stockLoss: 0, gross: 0, net: 0 });
 });
+
+test("invoice profit falls correctly for non-restocked returns and supports legacy lines without profit", () => { const groups = groupSalesByInvoice([{ id:"legacy-1", invoiceNo:"OLD-1", total:300, cost:180 },{ id:"legacy-2", invoiceNo:"OLD-1", total:200, cost:120 }],[{ saleId:"legacy-1", amount:50, cost:30, restocked:false },{ saleId:"legacy-2", amount:40, cost:24, restocked:true }]); assert.equal(groups[0].total,410); assert.equal(groups[0].profit,110); });
+test("customer account remains balanced when a fully paid sale is fully returned and refunded", () => { const result=customerBalance({sales:[{id:"s1",customerId:"c1",total:100,paid:100}],sales_returns:[{saleId:"s1",customerId:"c1",amount:100,refundPaid:100}],payments:[]},{id:"c1"}); assert.deepEqual({total:result.total,paid:result.paid,balance:result.balance},{total:0,paid:0,balance:0}); });
