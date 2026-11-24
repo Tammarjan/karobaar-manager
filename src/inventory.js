@@ -22,7 +22,7 @@ export function reconcileInventory(products = [], batches = []) {
   }
 
   const rows = products.map(product => {
-    const rawStock = Number(product.stock);
+    const rawStock = product.stock === undefined || product.stock === null || product.stock === "" ? 0 : Number(product.stock);
     const invalidStock = !Number.isFinite(rawStock) || rawStock < 0;
     const stock = invalidStock ? 0 : rawStock;
     const batchQty = batchTotals.get(product.id) || 0;
