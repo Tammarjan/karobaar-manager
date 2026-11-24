@@ -1,0 +1,12 @@
+{
+  "name": "Karobaar Manager",
+  "short_name": "Karobaar",
+  "description": "Simple offline business, stock, sales and profit manager.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7f5",
+  "theme_color": "#123c32",
+  "icons": []
+}
