@@ -1,4 +1,4 @@
-import { sum, costOf, customerBalance, supplierBalance, groupSalesByInvoice, buildAccountingCsv } from "./accounting.js";
+import { sum, costOf, customerBalance, supplierBalance, groupSalesByInvoice, buildAccountingCsv, profitSummary } from "./accounting.js";
 import { validateBackupPayload } from "./backup.js";
 import { auditDataIntegrity } from "./data-integrity.js";
 import { reconcileInventory } from "./inventory.js";
