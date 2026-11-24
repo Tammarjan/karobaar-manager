@@ -1,0 +1,62 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { customerBalance, supplierBalance, groupSalesByInvoice, profitSummary } from "../src/accounting.js";
+
+test("multi-item invoice groups lines and combines returns without merging distinct invoices", () => {
+  const sales = [
+    { id: "s1", invoiceNo: "INV-1", total: 200, paid: 100, profit: 60, createdAt: 1 },
+    { id: "s2", invoiceNo: "INV-1", total: 150, paid: 75, profit: 45, createdAt: 2 },
+    { id: "s3", invoiceNo: "INV-2", total: 50, paid: 50, profit: 10, createdAt: 3 }
+  ];
+  const returns = [{ saleId: "s1", amount: 40, cost: 20, restocked: true }];
+  const groups = groupSalesByInvoice(sales, returns);
+  assert.equal(groups.length, 2);
+  assert.equal(groups[0].total, 310);
+  assert.equal(groups[0].paid, 175);
+  assert.equal(groups[0].profit, 40);
+  assert.equal(groups[1].total, 50);
+});
+
+test("customer balance accounts for invoice payments, later payments, returns and cash refunds", () => {
+  const customer = { id: "c1" };
+  const result = customerBalance({
+    sales: [{ id: "s1", customerId: "c1", total: 500, paid: 200 }],
+    sales_returns: [{ saleId: "s1", customerId: "c1", amount: 100, refundPaid: 30 }],
+    payments: [{ customerId: "c1", amount: 150 }]
+  }, customer);
+  assert.deepEqual({ total: result.total, paid: result.paid, balance: result.balance },
+    { total: 400, paid: 320, balance: 80 });
+});
+
+test("supplier payable subtracts payments from assigned purchases only", () => {
+  const supplier = { id: "v1" };
+  const result = supplierBalance({
+    purchases: [
+      { supplierId: "v1", total: 700 },
+      { supplierId: "", total: 90 }
+    ],
+    supplier_payments: [{ supplierId: "v1", amount: 250 }]
+  }, supplier);
+  assert.deepEqual({ total: result.total, paid: result.paid, balance: result.balance },
+    { total: 700, paid: 250, balance: 450 });
+});
+
+test("profit reverses COGS only for restocked returns and subtracts stock losses", () => {
+  const result = profitSummary({
+    sales: [{ total: 1000, cost: 600 }],
+    returns: [
+      { amount: 200, cost: 120, restocked: true },
+      { amount: 100, cost: 60, restocked: false }
+    ],
+    expenses: [{ amount: 50 }],
+    adjustments: [{ delta: -2, lossValue: 30 }, { delta: 1, lossValue: 0 }]
+  });
+  assert.deepEqual(result, {
+    revenue: 700, cogs: 480, expenses: 50, stockLoss: 30, gross: 220, net: 140
+  });
+});
+
+test("legacy sales without optional numeric fields remain safe", () => {
+  const result = profitSummary({ sales: [{}], returns: [{}], expenses: [{}], adjustments: [{}] });
+  assert.deepEqual(result, { revenue: 0, cogs: 0, expenses: 0, stockLoss: 0, gross: 0, net: 0 });
+});
