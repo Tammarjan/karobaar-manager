@@ -135,6 +135,8 @@ async function addSale(){
     records.push({id:uid(),invoiceNo,productId:p.id,productName:p.name,unit:p.unit,customerId:customer?.id||"",customerName:customer?.name||"Walk-in customer",qty:line.qty,rate:net/line.qty,grossRate:line.rate,grossTotal:gross,discountShare:share,total:net,cost,profit:net-cost,paid:grandTotal?paid*net/grandTotal:0,batchAllocations:allocations,date:o.date,createdAt:Date.now()});
    }
    await new Promise((resolve,reject)=>{const tx=db.transaction(["products","sales","inventory_batches"],"readwrite");for(const p of productUpdates)tx.objectStore("products").put(p);for(const b of batchUpdates)tx.objectStore("inventory_batches").put(b);for(const row of records)tx.objectStore("sales").put(row);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error("Could not save invoice"));});
+   const rateChanges=records.filter((row,i)=>row.grossRate!==Number(productUpdates.find(p=>p.id===row.productId)?.price));
+   if(rateChanges.length&&confirm("Update the saved default selling rate for the product(s) whose rate you changed?")){for(const row of rateChanges){const p=productUpdates.find(x=>x.id===row.productId);if(p){p.price=row.grossRate;await put("products",p);}}}
    toast("Invoice saved with "+records.length+" item(s)");
    closeModal();await render();
   }catch(err){toast(err.message||"Could not save invoice");}
