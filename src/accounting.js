@@ -43,7 +43,7 @@ export function groupSalesByInvoice(sales, returns = []) {
       customerName: items[0].customerName || "Walk-in customer",
       items,
       total: sum(items, x => Number(x.total || 0)) - returned,
-      profit: sum(items, x => Number(x.profit || 0)) - returned + restoredCost,
+      profit: sum(items, x => Number(x.profit ?? (Number(x.total || 0) - costOf(x)))) - returned + restoredCost,
       paid: sum(items, x => Number(x.paid || 0))
     };
   });
