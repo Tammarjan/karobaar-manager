@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - "src/**"
+      - "native/**"
       - "icons/**"
       - "index.html"
       - "manifest.webmanifest"
@@ -56,6 +57,13 @@ jobs:
 
       - name: Generate Android project
         run: npx cap add android
+
+      - name: Install native direct-SMS bridge
+        run: |
+          mkdir -p android/app/src/main/java/pk/karobaar/manager
+          cp native/android/DirectSmsPlugin.java android/app/src/main/java/pk/karobaar/manager/
+          printf '%s\n' 'package pk.karobaar.manager;' 'import com.getcapacitor.BridgeActivity;' 'public class MainActivity extends BridgeActivity {' '  @Override public void onCreate(android.os.Bundle savedInstanceState) {' '    registerPlugin(DirectSmsPlugin.class);' '    super.onCreate(savedInstanceState);' '  }' '}' > android/app/src/main/java/pk/karobaar/manager/MainActivity.java
+          sed -i 's#<application#<uses-permission android:name="android.permission.SEND_SMS" />\n    <application#' android/app/src/main/AndroidManifest.xml
 
       - name: Sync offline app into Android project
         run: npx cap sync android
