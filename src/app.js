@@ -1,4 +1,4 @@
-import { sum, costOf, customerBalance, supplierBalance, groupSalesByInvoice, profitSummary } from "./accounting.js";
+import { sum, costOf, customerBalance, supplierBalance, groupSalesByInvoice } from "./accounting.js";
 const DB_NAME = "karobaar-manager";
 const DB_VERSION = 7;
 const STORE_NAMES = ["products","purchases","sales","customers","expenses","payments","stock_adjustments","sales_returns","suppliers","supplier_payments","business_profile","inventory_batches"];
