@@ -7,9 +7,11 @@ A simple, mobile-first, offline-first business manager for small business owners
 - Mobile-first dashboard with sales, investment, gross profit, net profit and stock value
 - Investment, sales and profit trend chart
 - Local IndexedDB storage; no account, backend or Cloudflare required
-- Product catalogue and available stock
+- Product catalogue, product editing and protected deletion for unused products
+- Selling rate automatically updates when a different product is selected in the sale form
 - Purchase / stock-in entries using weighted-average unit cost
 - Sales with customer selection, automatic totals and default selling rates
+- Amount received defaults to zero, allowing credit sales without extra typing
 - One-time selling-rate override or update the saved default rate
 - Customer ledger with purchase history, payments received and outstanding balance
 - Record later customer payments against their balance
