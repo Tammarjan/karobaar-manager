@@ -11,6 +11,7 @@ A simple, mobile-first, offline-first business manager for small business owners
 - Selling rate automatically updates when a different product is selected in the sale form
 - Purchase / stock-in entries using weighted-average unit cost
 - Sales with customer selection, automatic totals and default selling rates
+- Individual numbered sales invoices with print / save as PDF
 - Amount received defaults to zero, allowing credit sales without extra typing
 - One-time selling-rate override or update the saved default rate
 - Customer ledger with purchase history, payments received and outstanding balance
