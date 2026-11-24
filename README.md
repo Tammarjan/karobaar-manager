@@ -134,3 +134,12 @@ Backup & settings includes a read-only record-link audit. It checks sales and pu
 - The service worker precaches the application shell, uses the cached app shell only for failed page navigations, and does not return HTML as a fallback for failed JavaScript, CSS or image requests.
 - Cache activation removes only older Karobaar Manager caches, leaving unrelated apps' caches on the same origin untouched.
 - For reliable first installation, open the hosted app once while online; after the shell is cached, it can start offline. Android APK packaging still needs a packaging tool and a final install test on a physical device.
+
+
+## Publish the PWA on GitHub Pages
+1. Open the repository Settings → Pages.
+2. Under Build and deployment, choose **GitHub Actions** as the source.
+3. Push to `main` or run the **Deploy Karobaar Manager PWA** workflow from the Actions tab.
+4. GitHub Pages will publish the PWA at `https://tammarjan.github.io/karobaar-manager/` once Pages is enabled.
+
+The deployment workflow publishes only the app shell, source modules and icons. A live HTTPS URL is needed before packaging this PWA as a Trusted Web Activity APK. The repository's Pages setting must be enabled by an owner; this workflow cannot change that repository setting itself.
