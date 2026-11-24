@@ -62,3 +62,9 @@ This is an active development build. It has received source-level syntax checks,
 - Quick POS sale accepts keyboard barcode scanners and manual code entry.
 - Uses the browser BarcodeDetector API for camera scanning where supported; external scanner entry remains available as fallback.
 - Camera scanning requires HTTPS, camera permission and browser support.
+
+
+## Multi-product POS invoices
+- Add multiple products and quantities to one invoice, remove cart lines before saving, and apply a fixed invoice discount.
+- Invoice totals and received payments are allocated across item-level sale records so existing customer balances, product returns and stock batch tracking continue to work.
+- Invoice printout groups all products under one invoice number.
