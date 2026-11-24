@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - "src/**"
+      - "sw.js"
       - "native/**"
       - "icons/**"
       - "index.html"
