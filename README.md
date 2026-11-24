@@ -143,3 +143,12 @@ Backup & settings includes a read-only record-link audit. It checks sales and pu
 4. GitHub Pages will publish the PWA at `https://tammarjan.github.io/karobaar-manager/` once Pages is enabled.
 
 The deployment workflow publishes only the app shell, source modules and icons. A live HTTPS URL is needed before packaging this PWA as a Trusted Web Activity APK. The repository's Pages setting must be enabled by an owner; this workflow cannot change that repository setting itself.
+
+
+## Android APK build
+
+The repository includes a GitHub Actions workflow that packages the same app files into a standalone Capacitor Android app. It builds a **debug APK** for direct installation; it does not require a Cloudflare account or a live internet connection to open the bundled app. Business records remain in local app storage on that device.
+
+To build it, open **Actions → Build Karobaar Manager Android APK → Run workflow**. When the run succeeds, open the run's **Artifacts** section and download `karobaar-manager-android-debug`. Extract the ZIP to get `app-debug.apk`.
+
+This debug APK is for testing and direct installation, not a Play Store release. Keep regular JSON backups: uninstalling the app or clearing its storage can remove locally stored business data. The Android build has not yet been tested on a physical device.
