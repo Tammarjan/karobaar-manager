@@ -127,3 +127,10 @@ Backup & settings includes a read-only record-link audit. It checks sales and pu
 - CSV downloads retain their object URL briefly so mobile browsers have time to start the download; UTF-8 BOM improves spreadsheet handling of non-English text.
 - The service worker precaches the app shell and all local JavaScript modules for offline startup after the first successful online load.
 - Browser print dialogs can be used to save invoices and statements as PDF. Final APK installation, camera scanning and device-specific print behavior still require testing on an Android phone.
+
+
+## PWA installation and offline behavior
+- The web app declares a stable manifest application ID and standalone display mode, with mobile browser metadata and an SVG app icon.
+- The service worker precaches the application shell, uses the cached app shell only for failed page navigations, and does not return HTML as a fallback for failed JavaScript, CSS or image requests.
+- Cache activation removes only older Karobaar Manager caches, leaving unrelated apps' caches on the same origin untouched.
+- For reliable first installation, open the hosted app once while online; after the shell is cached, it can start offline. Android APK packaging still needs a packaging tool and a final install test on a physical device.
