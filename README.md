@@ -105,3 +105,8 @@ Customer and supplier payments now recalculate the latest outstanding balance in
 - Dashboard gross-profit styling now clearly marks a negative gross result as a loss.
 
 - Backup restore validation is covered by tests; legacy backups without optional stores are normalized to empty arrays, while malformed records and duplicate IDs are rejected before existing device data is cleared.
+
+
+## Inventory reconciliation validation
+
+Inventory reconciliation is a pure tested module. It separates untracked product stock, batch over-allocation, orphan batches, invalid negative/non-numeric batch quantities and invalid product stock values. Invalid quantity data is excluded from normal totals and explicitly flagged for review.
