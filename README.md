@@ -120,3 +120,10 @@ The accounting CSV includes sales, purchases, expenses, customer and supplier pa
 ## Transaction link audit
 
 Backup & settings includes a read-only record-link audit. It checks sales and purchases against products, optional purchase supplier references, returns against original sales, customer and supplier payments against their account records, batches against products, and stock adjustments against products. It reports missing links without modifying or deleting data.
+
+
+## Mobile and Android readiness
+- The layout includes Android safe-area spacing, touch-friendly navigation controls and scrollable dialogs for smaller screens.
+- CSV downloads retain their object URL briefly so mobile browsers have time to start the download; UTF-8 BOM improves spreadsheet handling of non-English text.
+- The service worker precaches the app shell and all local JavaScript modules for offline startup after the first successful online load.
+- Browser print dialogs can be used to save invoices and statements as PDF. Final APK installation, camera scanning and device-specific print behavior still require testing on an Android phone.
