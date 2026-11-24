@@ -1,4 +1,4 @@
-const OPTIONAL_STORES = ["stock_adjustments","sales_returns","suppliers","supplier_payments","business_profile","inventory_batches"];
+const OPTIONAL_STORES = ["stock_adjustments","sales_returns","suppliers","supplier_payments","business_profile","inventory_batches","sms_messages"];
 
 export function validateBackupPayload(payload, storeNames) {
   if (!payload || payload.app !== "Karobaar Manager" || !payload.data ||
