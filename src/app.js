@@ -182,6 +182,6 @@ $("#pageContent").addEventListener("input",e=>{if(e.target.id==="productSearch")
 $("#pageContent").addEventListener("change",e=>{if(e.target.id==="chartRange"){chartRange=e.target.value;render();}if(e.target.id==="reportRange"){reportRange=e.target.value;render();}});
 $("#pageContent").addEventListener("click",e=>{if(e.target.id==="exportCsv")exportCSV();if(e.target.id==="backupData")downloadBackup();if(e.target.id==="chooseRestore")$("#restoreFile").click();});
 $("#pageContent").addEventListener("change",async e=>{if(e.target.id==="restoreFile"){try{await restoreBackup(e.target.files[0]);}catch(err){toast(err.message||"Restore failed");}e.target.value="";}});
-async function exportCSV(){const d=await data(),csv=buildAccountingCsv(d);const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="karobaar-accounting-report.csv";a.click();URL.revokeObjectURL(a.href);}
+async function exportCSV(){const d=await data(),csv="\uFEFF"+buildAccountingCsv(d),url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download="karobaar-accounting-report.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 async function init(){try{db=await openDB();await render();if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});}catch(e){console.error(e);toast("Could not open local database. Please reload the app.");}}
 init();
