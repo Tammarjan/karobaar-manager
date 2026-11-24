@@ -1,8 +1,9 @@
 const DB_NAME = "karobaar-manager";
-const DB_VERSION = 1;
-const STORE_NAMES = ["products","purchases","sales","customers","expenses"];
+const DB_VERSION = 2;
+const STORE_NAMES = ["products","purchases","sales","customers","expenses","payments"];
 const money = n => "Rs. " + Number(n || 0).toLocaleString("en-PK",{maximumFractionDigits:2});
-const localISO = d => {const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${day}`;};\nconst today = () => localISO(new Date());
+const localISO = d => {const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${day}`;};
+const today = () => localISO(new Date());
 const fmtDate = d => d ? new Date(d+"T00:00:00").toLocaleDateString("en-PK",{day:"numeric",month:"short",year:"numeric"}) : "—";
 const uid = () => crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2);
 let db, currentPage = "dashboard", chartRange = "week";
@@ -25,7 +26,8 @@ function pageIntro(title,sub,action,label){return `<div class="welcome-row"><div
 function dashboardPage(d){const sales=d.sales, purchases=d.purchases, expenses=d.expenses;const soldCost=sum(sales,costOf),revenue=sum(sales,x=>Number(x.total)),investment=sum(purchases,x=>Number(x.total)),expenseTotal=sum(expenses,x=>Number(x.amount)),gross=revenue-soldCost,net=gross-expenseTotal,stockQty=sum(d.products,p=>Number(p.stock||0)),stockValue=sum(d.products,p=>Number(p.stock||0)*Number(p.cost||0));const recent=[...sales].sort((a,b)=>b.createdAt-a.createdAt).slice(0,5);return `
 ${pageIntro("Good business starts with clear numbers","Here is how your business is doing.", "sale","New sale")}
 <div class="stats-grid">
- <div class="stat-card"><div class="stat-top">Total investment <span class="stat-icon">⇧</span></div><div class="stat-value">${money(investment)}</div><div class="stat-note">Recorded stock purchases</div></div>\n <div class="stat-card"><div class="stat-top">Total sales <span class="stat-icon">↗</span></div><div class="stat-value">${money(revenue)}</div><div class="stat-note">All recorded sales</div></div>
+ <div class="stat-card"><div class="stat-top">Total investment <span class="stat-icon">⇧</span></div><div class="stat-value">${money(investment)}</div><div class="stat-note">Recorded stock purchases</div></div>
+ <div class="stat-card"><div class="stat-top">Total sales <span class="stat-icon">↗</span></div><div class="stat-value">${money(revenue)}</div><div class="stat-note">All recorded sales</div></div>
  <div class="stat-card"><div class="stat-top">Gross profit <span class="stat-icon">◈</span></div><div class="stat-value positive">${money(gross)}</div><div class="stat-note">Sales minus cost of sold stock</div></div>
  <div class="stat-card"><div class="stat-top">Net profit <span class="stat-icon">⌁</span></div><div class="stat-value ${net<0?"negative":"positive"}">${money(net)}</div><div class="stat-note">After recorded expenses</div></div>
  <div class="stat-card"><div class="stat-top">Stock value <span class="stat-icon">▤</span></div><div class="stat-value">${money(stockValue)}</div><div class="stat-note">${stockQty.toLocaleString()} units available</div></div>
