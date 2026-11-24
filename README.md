@@ -110,3 +110,8 @@ Customer and supplier payments now recalculate the latest outstanding balance in
 ## Inventory reconciliation validation
 
 Inventory reconciliation is a pure tested module. It separates untracked product stock, batch over-allocation, orphan batches, invalid negative/non-numeric batch quantities and invalid product stock values. Invalid quantity data is excluded from normal totals and explicitly flagged for review.
+
+
+## Accounting CSV export
+
+The accounting CSV includes sales, purchases, expenses, customer and supplier payments, stock adjustments and sales returns. Return rows include cash refunded and whether goods were restocked. Text fields beginning with spreadsheet formula characters are neutralized to reduce CSV formula-injection risk.
