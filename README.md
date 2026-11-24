@@ -101,3 +101,5 @@ Customer and supplier payments now recalculate the latest outstanding balance in
 - Invoice profit falls back to net line total minus cost for legacy sale records that do not contain a stored profit field.
 - The dashboard trend chart includes negative net-profit values below a zero baseline rather than flattening losses to zero.
 - Regression tests cover legacy invoice profit and a fully returned, fully refunded customer sale.
+
+- Dashboard gross-profit styling now clearly marks a negative gross result as a loss.
