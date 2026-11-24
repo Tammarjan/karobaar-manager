@@ -1,4 +1,5 @@
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { customerBalance, supplierBalance, groupSalesByInvoice, profitSummary, buildAccountingCsv } from "../src/accounting.js";
 import { validateBackupPayload } from "../src/backup.js";
@@ -113,4 +114,18 @@ test("data integrity audit detects missing transaction links but allows optional
 test("data integrity audit accepts a clean linked dataset and empty legacy optional stores", () => {
   const result=auditDataIntegrity({products:[{id:"p"}],customers:[{id:"c"}],suppliers:[{id:"v"}],sales:[{id:"s",productId:"p"}],purchases:[{id:"b",productId:"p",supplierId:"v"}],sales_returns:[{id:"r",saleId:"s"}],payments:[{id:"pay",customerId:"c"}],supplier_payments:[{id:"sp",supplierId:"v"}],inventory_batches:[{id:"batch",productId:"p"}],stock_adjustments:[{id:"adj",productId:"p"}]});
   assert.equal(result.issues.length,0);
+});
+
+
+test("PWA manifest declares valid Android launcher icon assets", () => {
+  const manifest = JSON.parse(readFileSync(new URL("../manifest.webmanifest", import.meta.url), "utf8"));
+  assert.equal(manifest.display, "standalone");
+  assert.equal(manifest.id, "./");
+  for (const [size, file] of [[192, "../icons/icon-192.png"], [512, "../icons/icon-512.png"]]) {
+    const png = readFileSync(new URL(file, import.meta.url));
+    assert.deepEqual([...png.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+    assert.equal(png.readUInt32BE(16), size);
+    assert.equal(png.readUInt32BE(20), size);
+    assert.ok(manifest.icons.some(icon => icon.src.endsWith(file.split("/").pop()) && icon.sizes === `${size}x${size}`));
+  }
 });
