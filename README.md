@@ -48,3 +48,4 @@ Business records are stored in IndexedDB in the browser on this device. Clearing
 - Stock value is an estimate using the weighted-average unit cost and current stock quantity.
 
 This is an active development build. It has received source-level syntax checks, but it is not yet a final audited accounting release. Test it with sample records and keep backups before using it for live business accounts.
+\n\n## Supplier management\n- Supplier directory, optional supplier assignment on stock purchases, supplier payment records, outstanding payable balances and printable supplier account statements.\n
