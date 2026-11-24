@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { customerBalance, supplierBalance, groupSalesByInvoice, profitSummary } from "../src/accounting.js";
+import { validateBackupPayload } from "../src/backup.js";
 
 test("multi-item invoice groups lines and combines returns without merging distinct invoices", () => {
   const sales = [
@@ -63,3 +64,6 @@ test("legacy sales without optional numeric fields remain safe", () => {
 
 test("invoice profit falls correctly for non-restocked returns and supports legacy lines without profit", () => { const groups = groupSalesByInvoice([{ id:"legacy-1", invoiceNo:"OLD-1", total:300, cost:180 },{ id:"legacy-2", invoiceNo:"OLD-1", total:200, cost:120 }],[{ saleId:"legacy-1", amount:50, cost:30, restocked:false },{ saleId:"legacy-2", amount:40, cost:24, restocked:true }]); assert.equal(groups[0].total,410); assert.equal(groups[0].profit,134); });
 test("customer account remains balanced when a fully paid sale is fully returned and refunded", () => { const result=customerBalance({sales:[{id:"s1",customerId:"c1",total:100,paid:100}],sales_returns:[{saleId:"s1",customerId:"c1",amount:100,refundPaid:100}],payments:[]},{id:"c1"}); assert.deepEqual({total:result.total,paid:result.paid,balance:result.balance},{total:0,paid:0,balance:0}); });
+
+test("backup validation accepts legacy files missing optional stores without mutating input", () => { const stores=["products","purchases","sales","customers","expenses","payments","sales_returns","inventory_batches"]; const input={app:"Karobaar Manager",data:{products:[{id:"p1"}],purchases:[],sales:[],customers:[],expenses:[],payments:[]}}; const result=validateBackupPayload(input,stores); assert.deepEqual(result.data.sales_returns,[]); assert.deepEqual(result.data.inventory_batches,[]); assert.equal(input.data.sales_returns,undefined); });
+test("backup validation rejects duplicate IDs and malformed records before restore", () => { const stores=["products","purchases","sales","customers","expenses","payments"]; const base={app:"Karobaar Manager",data:{products:[{id:"p1"},{id:"p1"}],purchases:[],sales:[],customers:[],expenses:[],payments:[]}}; assert.throws(()=>validateBackupPayload(base,stores),/duplicate IDs/); const malformed={app:"Karobaar Manager",data:{products:[{id:" "}],purchases:[],sales:[],customers:[],expenses:[],payments:[]}}; assert.throws(()=>validateBackupPayload(malformed,stores),/invalid products record/); });
