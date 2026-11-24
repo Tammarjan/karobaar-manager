@@ -8,6 +8,7 @@ A simple, mobile-first, offline-first business manager for small business owners
 - Investment, sales and profit trend chart
 - Local IndexedDB storage; no account, backend or Cloudflare required
 - Product catalogue, product editing and protected deletion for unused products
+- Stock adjustments for damaged, missing, found or physically corrected stock; stock reductions are reflected as losses in net profit
 - Selling rate automatically updates when a different product is selected in the sale form
 - Purchase / stock-in entries using weighted-average unit cost
 - Sales with customer selection, automatic totals and default selling rates
