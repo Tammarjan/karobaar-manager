@@ -110,3 +110,9 @@
 .price-signal.good{background:#f0f8f3;border-color:#d5eadc}.price-signal.warn{background:#fff7ed;border-color:#f0dfc8}
 .price-disclaimer{margin-top:14px}
 @media(max-width:650px){.price-controls{grid-template-columns:1fr}.price-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.price-guidance{grid-template-columns:1fr}.price-metric b{font-size:17px}}
+
+
+/* Navigation fix: keep the full menu reachable on short Android screens. */
+#navigation{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:#477363 transparent}
+.sidebar-bottom{flex-shrink:0}
+@media(max-height:760px){.sidebar{padding-top:18px;padding-bottom:12px}.brand{padding-bottom:20px}.nav-label{padding-bottom:7px}.nav-item{padding-top:10px;padding-bottom:10px;margin:2px 0}.nav-more{margin-top:5px;padding-top:5px}}
