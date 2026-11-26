@@ -85,3 +85,6 @@
 .unit-picker-menu[hidden]{display:none!important}
 .unit-picker-option{display:block;width:100%;min-height:43px;padding:10px 12px;text-align:left;border:0;border-radius:6px;background:#fff;color:#24382e;font:inherit;font-size:15px}
 .unit-picker-option:active,.unit-picker-option:focus,.unit-picker-option:hover{background:#edf5f0;color:#17634d}
+
+/* Keep native hidden controls hidden even when component classes set display:flex or display:block. */
+[hidden]{display:none!important}
