@@ -88,3 +88,25 @@
 
 /* Keep native hidden controls hidden even when component classes set display:flex or display:block. */
 [hidden]{display:none!important}
+
+.price-controls{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.price-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.price-metric{background:#f5f8f6;border:1px solid #e5ece7;border-radius:12px;padding:13px;min-width:0}
+.price-metric span,.price-metric small{display:block;color:#708078;font-size:11px;line-height:1.5}
+.price-metric b{display:block;font-size:19px;color:#183d30;margin:6px 0;overflow-wrap:anywhere}
+.price-chart-scroll{width:100%;overflow-x:auto}
+.price-chart{width:100%;min-width:470px;height:auto;display:block}
+.price-grid{stroke:#e8eee9;stroke-width:1}
+.price-axis{fill:#748078;font-size:10px}
+.price-legend{display:flex;flex-wrap:wrap;gap:12px;align-items:center;color:#738078;font-size:11px;margin-top:10px}
+.price-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.price-legend .up{background:#15966b}.price-legend .down{background:#d45d58}
+.price-guidance{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.price-signal{border:1px solid #e3eae5;border-radius:11px;padding:14px;min-width:0}
+.price-signal b,.price-signal strong{display:block}
+.price-signal b{font-size:10px;letter-spacing:.04em;color:#718078}
+.price-signal strong{font-size:15px;margin:8px 0;color:#234536}
+.price-signal p,.price-disclaimer{font-size:12px;line-height:1.6;color:#718078;margin:5px 0 0}
+.price-signal.good{background:#f0f8f3;border-color:#d5eadc}.price-signal.warn{background:#fff7ed;border-color:#f0dfc8}
+.price-disclaimer{margin-top:14px}
+@media(max-width:650px){.price-controls{grid-template-columns:1fr}.price-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.price-guidance{grid-template-columns:1fr}.price-metric b{font-size:17px}}
