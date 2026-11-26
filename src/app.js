@@ -148,7 +148,7 @@ async function addPurchase(){
  '<div class="field full"><label>Choose product</label><select name="productId" id="f_productId">'+opts+'</select></div>'+
  formField("Quantity purchased (e.g. 10 kg)","qty","number","",true,'min="0.001" step="any"')+
  '<div class="field"><label>Total purchase bill (Rs.)</label><input id="f_totalBill" name="totalBill" type="number" min="0.01" step="0.01" required></div>'+
- '<div class="field"><label>Cost per kg (Rs.)</label><input id="f_costPerKg" name="costPerKg" type="number" min="0.01" step="0.01" required></div>'+
+ '<div class="field"><label>Cost per unit (Rs.)</label><input id="f_costPerKg" name="costPerKg" type="number" min="0.01" step="0.01" required></div>'+
  '<p class="form-help field full">Enter the quantity and either the total bill or cost per unit. The other value will be calculated automatically.</p>'+
  formField("Purchase date","date","date",today());
  showForm("Add stock purchase",fields,async o=>{
