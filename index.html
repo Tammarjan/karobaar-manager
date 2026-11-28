@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b4a37">
-  <meta name="description" content="Simple offline business, stock, sales and profit manager.">
+  <meta name="description" content="Simple offline sales and customer ledger manager.">
   <title>Karobaar Manager</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
@@ -16,21 +16,13 @@
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <a class="brand" href="#" aria-label="Karobaar Manager home"><span class="brand-mark">K</span><span><b>Karobaar</b><small>MANAGER</small></span></a>
-      <div class="nav-label">DAILY TASKS</div>
+      <div class="nav-label">SHOP</div>
       <nav id="navigation">
         <button class="nav-item active" data-page="dashboard"><span>⌂</span>Home</button>
-        <button class="nav-item" data-page="sales"><span>＋</span>New sale</button>
-        <button class="nav-item" data-page="products"><span>▤</span>Items & stock</button>
-        <button class="nav-item" data-page="customers"><span>♙</span>Customers</button>
-        <button class="nav-item" data-page="purchases"><span>⇧</span>Add stock
-        </button>
+        <button class="nav-item" data-page="sales"><span>＋</span>Sales history</button>
+        <button class="nav-item" data-page="products"><span>▤</span>Products</button>
+        <button class="nav-item" data-page="customers"><span>♙</span>Customers & dues</button>
         <details class="nav-more"><summary>More options</summary>
-          <button class="nav-item" data-page="expenses"><span>−</span>Shop expenses</button>
-          <button class="nav-item" data-page="reports"><span>▥</span>Reports & profit</button>
-          <button class="nav-item" data-page="prices"><span>↗</span>Price indicator</button>
-          <button class="nav-item" data-page="stock"><span>↕</span>Stock correction</button>
-          <button class="nav-item" data-page="returns"><span>↩</span>Returned items</button>
-          <button class="nav-item" data-page="suppliers"><span>♧</span>Suppliers</button>
           <button class="nav-item" data-page="settings"><span>⚙</span>Backup & settings</button>
         </details>
       </nav>
