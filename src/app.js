@@ -72,42 +72,9 @@ function stockAdjustmentsPage(d){const rows=[...d.stock_adjustments].sort((a,b)=
 function salesReturnsPage(d){const rows=[...d.sales_returns].sort((a,b)=>b.createdAt-a.createdAt);return pageIntro("Sales returns","Review returned goods, customer credits and refunds.")+(rows.length?'<div class="table-panel">'+table(["DATE","INVOICE","CUSTOMER","PRODUCT","QTY","RETURN VALUE","CASH REFUNDED","STOCK"],rows.map(x=>[fmtDate(x.date),escapeHTML(x.invoiceNo||"—"),escapeHTML(x.customerName),escapeHTML(x.productName),x.qty+" "+escapeHTML(x.unit||""),money(x.amount),money(x.refundPaid||0),x.restocked?"Restocked":"Not restocked"]))+'</div>':'<div class="panel empty"><b>No sales returns</b>Open Sales History and select Return on an invoice.</div>');}
 function batchAllocations(d,productId,qty){let remaining=qty;const batches=d.inventory_batches.filter(x=>x.productId===productId&&Number(x.remaining||0)>0).sort((a,b)=>(a.expiryDate||"9999-12-31").localeCompare(b.expiryDate||"9999-12-31")||Number(a.createdAt||0)-Number(b.createdAt||0));const allocations=[];for(const batch of batches){if(remaining<=0)break;const take=Math.min(remaining,Number(batch.remaining));batch.remaining-=take;allocations.push({batchId:batch.id,qty:take});remaining-=take;}return allocations;}
 async function saveInvoiceAtomic({cart,customerId,customerName,date,invoiceNo,discount,paid,subtotal,grandTotal}){
- return new Promise((resolve,reject)=>{
-  const tx=db.transaction(["products","sales","inventory_batches"],"readwrite");
-  const productStore=tx.objectStore("products"),salesStore=tx.objectStore("sales"),batchStore=tx.objectStore("inventory_batches");
-  const productsRequest=productStore.getAll(),batchesRequest=batchStore.getAll();
-  let records=[],productUpdates=[];
-  let productsReady=false,batchesReady=false,failed=false;
-  const fail=message=>{if(failed)return;failed=true;try{tx.abort();}catch{}reject(new Error(message));};
-  const build=()=>{
-   if(!productsReady||!batchesReady||failed)return;
-   try{
-    const productRows=productsRequest.result,batchRows=batchesRequest.result;
-    const productMap=new Map(productRows.map(p=>[p.id,p]));
-    const batchData={inventory_batches:batchRows};
-    const originalBatches=new Map(batchRows.map(b=>[b.id,Number(b.remaining||0)]));
-    for(const line of cart){
-     const p=productMap.get(line.productId);
-     if(!p||Number(p.stock||0)<line.qty)throw new Error("Stock changed for "+line.name+". Please reopen the invoice.");
-     const gross=line.qty*line.rate,share=subtotal?discount*gross/subtotal:0,net=Math.max(0,gross-share),cost=line.qty*Number(p.cost||0);
-     const allocations=batchAllocations(batchData,p.id,line.qty);
-     p.stock=Number(p.stock||0)-line.qty;
-     productUpdates.push(p);
-     records.push({id:uid(),invoiceNo,productId:p.id,productName:p.name,unit:p.unit,customerId:customerId||"",customerName:customerName||"Walk-in customer",qty:line.qty,rate:net/line.qty,grossRate:line.rate,grossTotal:gross,discountShare:share,total:net,cost,profit:net-cost,paid:grandTotal?paid*net/grandTotal:0,batchAllocations:allocations,date,createdAt:Date.now()});
-    }
-    for(const p of productUpdates)productStore.put(p);
-    for(const b of batchRows)if(originalBatches.get(b.id)!==Number(b.remaining||0))batchStore.put(b);
-    for(const row of records)salesStore.put(row);
-   }catch(error){fail(error.message||"Could not prepare invoice");}
-  };
-  productsRequest.onsuccess=()=>{productsReady=true;build();};
-  batchesRequest.onsuccess=()=>{batchesReady=true;build();};
-  productsRequest.onerror=()=>fail("Could not read current product stock");
-  batchesRequest.onerror=()=>fail("Could not read current stock batches");
-  tx.oncomplete=()=>{if(!failed)resolve({records,productUpdates});};
-  tx.onerror=()=>{if(!failed){failed=true;reject(tx.error||new Error("Could not save invoice"));}};
-  tx.onabort=()=>{if(!failed){failed=true;reject(tx.error||new Error("Invoice save was cancelled"));}};
- });
+ const records=cart.map(line=>{const gross=line.qty*line.rate,share=subtotal?discount*gross/subtotal:0,net=Math.max(0,gross-share);return {id:uid(),invoiceNo,productId:line.productId,productName:line.name,unit:line.unit,customerId:customerId||"",customerName:customerName||"Walk-in customer",qty:line.qty,rate:net/line.qty,grossRate:line.rate,grossTotal:gross,discountShare:share,total:net,cost:0,profit:net,paid:grandTotal?paid*net/grandTotal:0,batchAllocations:[],date,createdAt:Date.now()};});
+ await new Promise((resolve,reject)=>{const tx=db.transaction("sales","readwrite"),store=tx.objectStore("sales");for(const row of records)store.put(row);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error||new Error("Could not save invoice"));tx.onabort=()=>reject(tx.error||new Error("Invoice save was cancelled"));});
+ return {records,productUpdates:[]};
 }
 async function showProductHistory(productId){const d=await data(),p=d.products.find(x=>x.id===productId);if(!p)return;const rows=[];d.purchases.filter(x=>x.productId===productId).forEach(x=>rows.push([fmtDate(x.date),"Purchase",x.batchNo||"—",x.qty+" "+(x.unit||""),money(x.total)]));d.sales.filter(x=>x.productId===productId).forEach(x=>rows.push([fmtDate(x.date),"Sale",x.invoiceNo||"—","-"+x.qty+" "+(x.unit||""),money(x.total)]));d.stock_adjustments.filter(x=>x.productId===productId).forEach(x=>rows.push([fmtDate(x.date),"Stock adjustment",x.reason,(x.delta>0?"+":"")+x.delta+" "+(x.unit||""),money(x.lossValue||0)]));d.sales_returns.filter(x=>x.productId===productId).forEach(x=>rows.push([fmtDate(x.date),"Sales return",x.reason,(x.restocked?"+":"")+x.qty+" "+(x.unit||""),money(x.amount)]));rows.sort((a,b)=>a[0].localeCompare(b[0]));const batches=d.inventory_batches.filter(x=>x.productId===productId).sort((a,b)=>(a.expiryDate||"9999").localeCompare(b.expiryDate||"9999"));modal(escapeHTML(p.name),'<h3>Transaction history</h3>'+(rows.length?table(["DATE","TYPE","REFERENCE / REASON","QUANTITY","VALUE"],rows):'<div class="empty">No transactions recorded.</div>')+'<h3 style="margin-top:20px">Stock batches</h3>'+(batches.length?table(["BATCH","EXPIRY","REMAINING"],batches.map(x=>[escapeHTML(x.batchNo||"—"),fmtDate(x.expiryDate),Number(x.remaining||0)+" "+escapeHTML(p.unit||"")])):'<div class="empty">No batch records.</div>'));}
 function suppliersPage(d){return pageIntro("Suppliers","Manage suppliers, purchase balances and payments.","supplier","Add supplier")+(d.suppliers.length?'<div class="table-panel">'+table(["SUPPLIER","PHONE","PURCHASES","TOTAL PURCHASES","PAID","PAYABLE",""],d.suppliers.map(s=>{const b=supplierBalance(d,s);return ['<b>'+escapeHTML(s.name)+'</b>',escapeHTML(s.phone||"—"),b.purchases.length,money(b.total),money(b.paid),'<span class="'+(b.balance>0?"negative":"positive")+'">'+money(b.balance)+'</span>','<button class="button secondary small" data-action="supplier-ledger" data-supplier-id="'+s.id+'">View ledger</button>'];}))+'</div>':'<div class="panel empty"><b>No suppliers added</b>Add your regular suppliers to track purchases and outstanding payments.</div>');}
