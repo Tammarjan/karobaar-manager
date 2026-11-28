@@ -1,19 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#08764e"/><stop offset="1" stop-color="#082f28"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe9a1"/><stop offset="1" stop-color="#d89a22"/></linearGradient></defs>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#087d50"/><stop offset="1" stop-color="#062c22"/></linearGradient>
+ <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#e8f0e9"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe58a"/><stop offset="1" stop-color="#e5a92e"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="12"/><feOffset dy="12"/><feComponentTransfer><feFuncA type="linear" slope=".28"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
 <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-<path d="M118 180h276l-20 66H138z" fill="#fff9e8"/>
-<path d="M138 242h236v177H138z" fill="#fff9e8"/>
-<path d="M118 180h276v65H118z" fill="#f7f1df"/>
-<path d="M118 180h55v65h-55zm110 0h55v65h-55zm110 0h56v65h-56z" fill="#0b8b5b"/>
-<path d="M145 245h52v-65h-52zm110 0h52v-65h-52z" fill="#fff9e8"/>
-<path d="M198 180c0-38 26-65 58-65s58 27 58 65" fill="none" stroke="url(#gold)" stroke-width="19" stroke-linecap="round"/>
-<rect x="165" y="286" width="92" height="112" rx="14" fill="#064b38"/>
-<path d="M183 365v-36h22v36m13 0v-52h22v52" fill="none" stroke="#f9f2dc" stroke-width="11" stroke-linecap="round"/>
-<path d="M266 354l42-27 28-34" fill="none" stroke="#d99b25" stroke-width="10" stroke-linecap="round"/>
-<path d="M320 288l28-4-7 27" fill="none" stroke="#d99b25" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="300" y="320" width="110" height="112" rx="18" fill="#fff9e8" stroke="#0a5c43" stroke-width="9"/>
-<path d="M322 352l10 11 19-22m-29 47 10 11 19-22m-29 47 10 11 19-22" fill="none" stroke="#08764e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M359 357h31m-31 36h31m-31 36h31" stroke="#0b513c" stroke-width="8" stroke-linecap="round"/>
-<ellipse cx="122" cy="402" rx="42" ry="14" fill="url(#gold)"/><path d="M80 402v20c0 9 19 16 42 16s42-7 42-16v-20" fill="#d99b25"/><ellipse cx="122" cy="422" rx="42" ry="14" fill="#f5c957"/>
-<path d="M102 445c92 39 221 36 305-12" fill="none" stroke="url(#gold)" stroke-width="9" stroke-linecap="round"/>
+<circle cx="256" cy="250" r="208" fill="#fff" opacity=".035"/>
+<g filter="url(#shadow)">
+ <path d="M112 186h288v222q0 18-18 18H130q-18 0-18-18z" fill="url(#paper)"/>
+ <path d="M92 190l29-83q5-15 22-15h226q17 0 22 15l29 83z" fill="#f8fcf8"/>
+ <path d="M92 190h328v52q0 29-29 29t-29-29q0 29-29 29t-29-29q0 29-29 29t-29-29q0 29-29 29t-29-29q0 29-29 29t-29-29z" fill="#087d50"/>
+ <path d="M158 190v52q0 29 29 29t29-29v-52zm131 0v52q0 29 29 29t29-29v-52z" fill="#fff"/>
+ <rect x="154" y="302" width="180" height="17" rx="8.5" fill="#0c543b"/>
+ <rect x="154" y="344" width="132" height="17" rx="8.5" fill="#0c543b"/>
+ <rect x="154" y="386" width="104" height="17" rx="8.5" fill="#0c543b"/>
+ <circle cx="354" cy="365" r="75" fill="url(#gold)" stroke="#fff0b6" stroke-width="8"/>
+ <path d="M315 333h16l12 58h57l16-43h-74" fill="none" stroke="#07432f" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+ <circle cx="351" cy="409" r="8" fill="#07432f"/><circle cx="389" cy="409" r="8" fill="#07432f"/>
+</g>
 </svg>
